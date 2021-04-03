@@ -19,7 +19,6 @@ broker_username = os.getenv('MQTT_USERNAME');
 broker_password = os.getenv('MQTT_PASSWORD');
 client = mqtt.Client()
 client.username_pw_set(broker_username, broker_password) #Username and pass if configured otherwise you should comment out this
-client.on_connect=on_connect
 deviceName = os.getenv('DEVICE_NAME', 'pi')
 SYSFILE = '/sys/devices/platform/soc/soc:firmware/get_throttled'
 WAIT_TIME_SECONDS = int(os.getenv('WAIT_TIME', 60))
@@ -112,6 +111,7 @@ def get_rpi_power_status():
 if __name__ == "__main__":
     signal.signal(signal.SIGTERM, signal_handler)
     signal.signal(signal.SIGINT, signal_handler)
+    client.on_connect=on_connect
     client.connect(broker_url, broker_port)
     client.publish(topic="homeassistant/sensor/"+ deviceName +"/"+ deviceName +"Temp/config", payload='{"name":"'+ deviceName +'Temperature","state_topic":"system-sensors/sensor/'+ deviceName +'/state","unit_of_measurement":"°C","value_template":"{{ value_json.temperature}}","unique_id":"'+ deviceName.lower() +'_sensor_temperature","device":{"identifiers":["'+ deviceName.lower() +'_sensor"],"name":"'+ deviceName +'Sensors","model":"RPI '+ deviceName +'","manufacturer":"RPI"}}', qos=1, retain=True)
     client.publish(topic="homeassistant/sensor/"+ deviceName +"/"+ deviceName +"DiskUse/config", payload='{"name":"'+ deviceName +'DiskUse","state_topic":"system-sensors/sensor/'+ deviceName +'/state","unit_of_measurement":"%","value_template":"{{ value_json.disk_use}}","unique_id":"'+ deviceName.lower() +'_sensor_disk_use","device":{"identifiers":["'+ deviceName.lower() +'_sensor"],"name":"'+ deviceName +'Sensors","model":"RPI '+ deviceName +'","manufacturer":"RPI"}}', qos=1, retain=True)
