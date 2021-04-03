@@ -11,5 +11,7 @@ services:
     environment:
       - MQTT_HOST=localhost
       - MQTT_PORT=1883
+      - MQTT_USERNAME=my_user
+      - MQTT_PASSWORD=my_password
       - DEVICE_NAME=myPi
       - LD_LIBRARY_PATH=/opt/vc/lib
