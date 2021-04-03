@@ -15,8 +15,11 @@ UTC = pytz.utc
 DEFAULT_TIME_ZONE = timezone(os.getenv('TZ', 'Europe/Berlin'))#Local Time zone
 broker_url = os.getenv('MQTT_HOST', 'localhost')
 broker_port = int(os.getenv('MQTT_PORT', 1883))
+broker_username = os.getenv('MQTT_USERNAME');
+broker_password = os.getenv('MQTT_PASSWORD');
 client = mqtt.Client()
-#client.username_pw_set("", "") #Username and pass if configured otherwise you should comment out this
+client.username_pw_set(broker_username, broker_password) #Username and pass if configured otherwise you should comment out this
+client.on_connect=onconnect
 deviceName = os.getenv('DEVICE_NAME', 'pi')
 SYSFILE = '/sys/devices/platform/soc/soc:firmware/get_throttled'
 WAIT_TIME_SECONDS = int(os.getenv('WAIT_TIME', 60))
@@ -56,6 +59,12 @@ def as_local(dattim: dt.datetime) -> dt.datetime:
         dattim = UTC.localize(dattim)
 
     return dattim.astimezone(DEFAULT_TIME_ZONE)
+
+def on_connect(client, userdata, flags, rc):
+    if rc==0:
+        print("connected OK Returned code=",rc)
+    else:
+        print("Bad connection Returned code=",rc)
 
 def get_last_boot():
     return str(as_local(utc_from_timestamp(psutil.boot_time())).isoformat())
