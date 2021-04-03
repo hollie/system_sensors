@@ -19,7 +19,7 @@ broker_username = os.getenv('MQTT_USERNAME');
 broker_password = os.getenv('MQTT_PASSWORD');
 client = mqtt.Client()
 client.username_pw_set(broker_username, broker_password) #Username and pass if configured otherwise you should comment out this
-client.on_connect=onconnect
+client.on_connect=on_connect
 deviceName = os.getenv('DEVICE_NAME', 'pi')
 SYSFILE = '/sys/devices/platform/soc/soc:firmware/get_throttled'
 WAIT_TIME_SECONDS = int(os.getenv('WAIT_TIME', 60))
